@@ -23,6 +23,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Image Processing",
 ]
+
+metadata = [
+    url = https://github.com/your-repo-username/your-repo-name.git
+]
+
 requires-python = ">=3.9"
 dependencies = [
     "numpy",
