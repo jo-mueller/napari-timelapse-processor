@@ -37,12 +37,27 @@ def test_frame_by_frame_image(create_4D_image):
     assert processed_image.shape == image.shape
     assert (processed_image == image * 2).all()
 
+    # try in distributed mode
+    processed_image = frame_by_frame(image_processing_function, use_dask=True)(
+        image
+    )
+    assert processed_image.shape == image.shape
+    assert (processed_image == image * 2).all()
+
 
 def test_frame_by_frame_labels(create_4D_labels):
     from napari_timelapse_processor import frame_by_frame
 
     labels = create_4D_labels
     processed_labels = frame_by_frame(label_processing_function)(labels)
+    assert processed_labels.shape == labels.shape
+    assert (processed_labels[0] == labels[0] + 1).all()
+    assert (processed_labels[1] == labels[1] + 1).all()
+
+    # try in distributed mode
+    processed_labels = frame_by_frame(
+        label_processing_function, use_dask=True
+    )(labels)
     assert processed_labels.shape == labels.shape
     assert (processed_labels[0] == labels[0] + 1).all()
     assert (processed_labels[1] == labels[1] + 1).all()
@@ -66,12 +81,29 @@ def test_frame_by_frame_vectors(create_4D_vectors):
     assert (processed_vectors[:, 0, 1:] == vectors[:, 0, 1:] * 2).all()
     assert (processed_vectors[:, 1, 1:] == vectors[:, 1, 1:] * 2).all()
 
+    # try in distributed mode
+    processed_vectors = frame_by_frame(
+        vectors_processing_function, use_dask=True
+    )(vectors)
+    assert processed_vectors.shape == vectors.shape
+    assert (processed_vectors[:, 0, 1:] == vectors[:, 0, 1:] * 2).all()
+    assert (processed_vectors[:, 1, 1:] == vectors[:, 1, 1:] * 2).all()
+
 
 def test_frame_by_frame_mesh(create_4d_mesh):
     from napari_timelapse_processor import frame_by_frame
 
     mesh = create_4d_mesh
     processed_mesh = frame_by_frame(mesh_processing_function)(mesh)
+    assert processed_mesh[0].shape == mesh[0].shape
+    assert processed_mesh[1].shape == mesh[1].shape
+    assert (processed_mesh[0][:, 1:] == mesh[0][:, 1:] * 2).all()
+    assert (processed_mesh[1] == mesh[1]).all()
+
+    # try in distributed mode
+    processed_mesh = frame_by_frame(mesh_processing_function, use_dask=True)(
+        mesh
+    )
     assert processed_mesh[0].shape == mesh[0].shape
     assert processed_mesh[1].shape == mesh[1].shape
     assert (processed_mesh[0][:, 1:] == mesh[0][:, 1:] * 2).all()
