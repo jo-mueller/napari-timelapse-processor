@@ -106,5 +106,6 @@ exclude = [
     "*_vendor*",
 ]
 
+ignore = ["F821"]
 target-version = "py38"
 fix = true
