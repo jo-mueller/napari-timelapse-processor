@@ -82,6 +82,7 @@ lint.ignore = [
     "E501", # line too long. let black handle this
     "UP006", "UP007", # type annotation. As using magicgui require runtime type annotation then we disable this.
     "SIM117", # flake8-simplify - some of merged with statements are not looking great with black, reanble after drop python 3.9
+    "F821", # flake8 - undefined name should be ignored as it is not able to detect the magicgui decorators
 ]
 
 exclude = [
@@ -106,6 +107,5 @@ exclude = [
     "*_vendor*",
 ]
 
-ignore = ["F821"]
 target-version = "py38"
 fix = true
