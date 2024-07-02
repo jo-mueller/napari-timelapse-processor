@@ -8,7 +8,6 @@ authors = [
   {name = "Johannes Soltwedel"},
   {email = "johannes_richard.soltwedel@tu-dresden.de"},
 ]
-url = "https://github.com/jo-mueller/napari-timelapse-processor"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Framework :: napari",
@@ -40,6 +39,8 @@ testing = [
 [project.entry-points."napari.manifest"]
 napari-timelapse-processor = "napari_timelapse_processor:napari.yaml"
 
+[project.urls]
+Repository = https://github.com/jo-mueller/napari-timelapse-processor.git
 
 
 [build-system]
