@@ -30,6 +30,7 @@ dependencies = [
     "tqdm",
     "napari",
     "dask"
+    "distributed",
 ]
 
 [project.optional-dependencies]
