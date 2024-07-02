@@ -31,6 +31,36 @@ def test_convert_images(create_3D_image, create_4D_image):
     assert np.array_equal(images_4d, back_converted)
 
 
+def test_convert_labels(create_3D_labels, create_4D_labels):
+    from napari_timelapse_processor import TimelapseConverter
+
+    Converter = TimelapseConverter()
+
+    # First we check conversion from list of 3D labels to 4d labels and back
+    list_of_3d_labels = [create_3D_labels for _ in range(5)]
+    converted_labels = Converter.stack_data(
+        list_of_3d_labels, layertype="napari.types.LabelsData"
+    )
+
+    back_converted = Converter.unstack_data(
+        converted_labels, layertype="napari.types.LabelsData"
+    )
+
+    for i in range(5):
+        assert np.array_equal(list_of_3d_labels[i], back_converted[i])
+
+    # Now we check conversion from 4d labels to list of 3d labels and back
+    labels_4d = create_4D_labels
+    converted_labels = Converter.unstack_data(
+        labels_4d, layertype="napari.types.LabelsData"
+    )
+    back_converted = Converter.stack_data(
+        converted_labels, layertype="napari.types.LabelsData"
+    )
+
+    assert np.array_equal(labels_4d, back_converted)
+
+
 def test_convert_points(create_3D_points, create_4D_points):
     from napari_timelapse_processor import TimelapseConverter
 
