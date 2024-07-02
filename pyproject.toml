@@ -40,7 +40,7 @@ testing = [
 napari-timelapse-processor = "napari_timelapse_processor:napari.yaml"
 
 [project.urls]
-Repository = https://github.com/jo-mueller/napari-timelapse-processor.git
+Repository = "https://github.com/jo-mueller/napari-timelapse-processor.git"
 
 
 [build-system]
