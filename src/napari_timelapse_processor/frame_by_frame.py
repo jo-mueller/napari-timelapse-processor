@@ -7,7 +7,7 @@ from dask.distributed import Client, get_client
 from .timelapse_converter import TimelapseConverter
 
 
-def frame_by_frame(function: callable, progress_bar: bool = False):
+def frame_by_frame(function: callable, progress_bar: bool = True):
     """
     Decorator to apply a function frame by frame to 4D data.
 
@@ -69,7 +69,9 @@ def frame_by_frame(function: callable, progress_bar: bool = False):
         # apply function frame by frame
         results = [None] * n_frames
         frames = (
-            tqdm.tqdm(range(n_frames)) if progress_bar else range(n_frames)
+            tqdm.tqdm(range(n_frames), leave=False)
+            if progress_bar
+            else range(n_frames)
         )
 
         # start dask cluster client
