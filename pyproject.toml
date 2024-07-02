@@ -29,7 +29,7 @@ dependencies = [
     "numpy",
     "tqdm",
     "napari",
-    "dask"
+    "dask",
     "distributed",
 ]
 
