@@ -373,7 +373,11 @@ class TimelapseConverter:
             output_data = self._unstack_image(layer.data)
 
         # unstack features
-        if "frame" in layer.features.columns or time_column is None:
+
+        if layer.features is None or layer.features.empty:
+            feature_list = [pd.DataFrame() for _ in range(len(output_data))]
+
+        elif "frame" in layer.features.columns or time_column is None:
             feature_list = [
                 layer.features[layer.features["frame"] == i]
                 for i in range(len(output_data))
