@@ -246,11 +246,10 @@ class TimelapseConverter:
 
         vertices = self._stack_points(vertices)
 
-        # Adjust faces to account for the number of vertices
-        # subtract the number of vertices in the first surface so that the faces of first frame
-        # are not offfset
+        # Calculate cumulative vertex counts for surfaces, adjust face indices
+        # accordingly, and combine faces into one array.
         n_vertices = np.cumsum([surface[0].shape[0] for surface in surfaces])
-        n_vertices = n_vertices - len(surfaces[0][0])
+        n_vertices = [0] + list(n_vertices)
 
         faces = [n_vertices[i] + face for i, face in enumerate(faces)]
         faces = np.vstack(faces)

@@ -195,3 +195,26 @@ def test_convert_mesh(create_3d_mesh, create_4d_mesh):
 
     assert np.array_equal(mesh_4d[0], back_converted[0])
     assert np.array_equal(mesh_4d[1], back_converted[1])
+
+def test_faces_index_after_stacking():
+    from napari_timelapse_processor import TimelapseConverter
+    Converter = TimelapseConverter()
+    # Define mock surfaces with vertices and faces
+    surfaces = [
+        (
+            np.array([[0, 0, 0], [1, 1, 1], [2, 2, 2]]),
+            np.array([[0, 1, 2]])),  # 3 vertices, 1 face
+        (
+            np.array([[3, 3, 3], [4, 4, 4], [5, 5, 5]]),
+            np.array([[0, 1, 2]])),  # 3 vertices, 1 face
+    ]
+
+    # Stack surfaces
+    result = Converter._stack_surfaces(surfaces)
+
+    # The lowest index in the faces array at timestep 1 should be 3,
+    # as there are 3 vertices (0, 1, 2) before it
+    assert result[1][0].min() == 0
+    assert result[1][0].max() == 2
+    assert result[1][1].min() == 3
+    assert result[1][1].max() == 5
