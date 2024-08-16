@@ -1,4 +1,4 @@
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 from .frame_by_frame import frame_by_frame
 from .timelapse_converter import TimelapseConverter
