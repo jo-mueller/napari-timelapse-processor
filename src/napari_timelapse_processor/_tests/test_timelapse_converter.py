@@ -218,3 +218,50 @@ def test_faces_index_after_stacking():
     assert result[1][0].max() == 2
     assert result[1][1].min() == 3
     assert result[1][1].max() == 5
+
+# def create_3d_layerdatatuple_with_features():
+#     import pandas as pd
+
+#     points = np.random.random((10, 3))
+#     features = pd.DataFrame(
+#         {
+#             "feature1": np.random.random(len(points)),
+#             "feature2": np.random.random(len(points)),
+#         }
+#     )
+
+#     layerdatatuple = (
+#         points,
+#         {'features': features,
+#          'name': 'pointcloud',
+#         },
+#         'points')
+             
+#     return layerdatatuple
+
+def test_convert_layerdatatuple(create_3d_layerdatatuple_with_features):
+    from napari_timelapse_processor import TimelapseConverter
+    import pandas as pd
+
+    Converter = TimelapseConverter()
+
+    # First we check conversion from list of 3D layerdatatuple to 4d layerdatatuple and back
+    list_of_3d_layerdatatuple = [create_3d_layerdatatuple_with_features for _ in range(5)]
+    converted_layerdatatuple = Converter.stack_data(
+        list_of_3d_layerdatatuple, layertype="napari.types.LayerDataTuple"
+    )
+
+    back_converted = Converter.unstack_data(
+        converted_layerdatatuple, layertype="napari.types.LayerDataTuple"
+    )
+
+    for i in range(5):
+        assert np.array_equal(
+            list_of_3d_layerdatatuple[i][0], back_converted[i][0]
+        )
+        features1 = list_of_3d_layerdatatuple[i][1]['features']
+        features2 = back_converted[i][1]['features'].drop('frame', axis=1)
+        assert features1.equals(features2)
+
+if __name__ == "__main__":
+    test_convert_layerdatatuple(create_3d_layerdatatuple_with_features)
