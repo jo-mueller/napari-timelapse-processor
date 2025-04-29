@@ -187,3 +187,25 @@ def create_4dmesh_layer_with_features():
     layer = Surface((vertices, faces))
     layer.features = features
     return layer
+
+
+@pytest.fixture
+def create_3d_layerdatatuple_with_features():
+    import pandas as pd
+
+    points = np.random.random((10, 3))
+    features = pd.DataFrame(
+        {
+            "feature1": np.random.random(len(points)),
+            "feature2": np.random.random(len(points)),
+        }
+    )
+
+    layerdatatuple = (
+        points,
+        {'features': features,
+         'name': 'pointcloud',
+        },
+        'points')
+             
+    return layerdatatuple
