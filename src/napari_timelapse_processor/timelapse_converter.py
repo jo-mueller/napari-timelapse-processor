@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from napari.layers import Image, Labels, Layer, Points, Surface, Vectors
+from napari.types import LayerDataTuple
 
 
 class TimelapseConverter:
@@ -49,11 +50,13 @@ class TimelapseConverter:
             Image: self._stack_layer,
             Labels: self._stack_layer,
             Layer: self._stack_layer,
+            LayerDataTuple: self._stack_layerdatatuple,
             "napari.types.PointsData": self._stack_points,
             "napari.types.VectorsData": self._stack_vectors,
             "napari.types.SurfaceData": self._stack_surfaces,
             "napari.types.ImageData": self._stack_image,
             "napari.types.LabelsData": self._stack_image,
+            "napari.types.LayerDataTuple": self._stack_layerdatatuple,
         }
 
         self.unstack_data_functions = {
@@ -63,11 +66,13 @@ class TimelapseConverter:
             Image: self._unstack_layer,
             Labels: self._unstack_layer,
             Layer: self._unstack_layer,
+            LayerDataTuple: self._unstack_layerdatatuple,
             "napari.types.PointsData": self._unstack_points,
             "napari.types.VectorsData": self._unstack_vectors,
             "napari.types.SurfaceData": self._unstack_surface,
             "napari.types.ImageData": self._unstack_image,
             "napari.types.LabelsData": self._unstack_image,
+            "napari.types.LayerDataTuple": self._unstack_layerdatatuple,
         }
 
         self.supported_data = list(self.stack_data_functions.keys())
@@ -304,6 +309,26 @@ class TimelapseConverter:
             surfaces[t] = (frame_points, frame_faces, frame_values)
 
         return surfaces
+    
+    def _stack_layerdatatuple(self, layers: list) -> LayerDataTuple:
+        """
+        Convert list of 3D layerdatatuples to single 4D layerdatatuple.
+        """
+
+        layers = [Layer.create(*ldt) for ldt in layers]
+        result = self._stack_layer(layers)
+        
+        return result.as_layer_data_tuple()
+    
+    def _unstack_layerdatatuple(self, layer: LayerDataTuple) -> list:
+        """
+        Convert a 4D layerdatatuple to list of 3D layerdatatuples
+        """
+        layer = Layer.create(*layer)
+        result = self._unstack_layer(layer)
+        
+        return [layer.as_layer_data_tuple() for layer in result]
+
 
     def _stack_layer(self, layers: list) -> Layer:
         """
