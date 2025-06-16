@@ -48,7 +48,7 @@ Repository = "https://github.com/jo-mueller/napari-timelapse-processor.git"
 
 
 [build-system]
-requires = ["setuptools>=42.0.0", "wheel"]
+requires = ["setuptools>=42.0.0", "wheel", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -60,9 +60,9 @@ where = ["src"]
 [tool.setuptools.package-data]
 "*" = ["*.yaml"]
 
-
-[tool.setuptools.dynamic]
-version = {attr = "napari_timelapse_processor.__init__.__version__"}
+[tool.setuptools_scm]
+write_to = "src/napari_timelapse_processor/_version.py"
+fallback_version = "0.0.1+nogit"
 
 [tool.black]
 line-length = 79
