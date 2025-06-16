@@ -364,10 +364,13 @@ class TimelapseConverter:
             for key in list(metadata_list[0].keys())
         }
         output_metadata = {
-            key: np.concatenate(metadata_values[key])
+            key: (
+                np.concatenate(metadata_values[key])
+                if all(np.ndim(v) > 0 for v in metadata_values[key])
+                else np.array(metadata_values[key])
+            )
             for key in metadata_values
         }
-
         # create a new layer with the stacked data
         output_layer = type(layers[0])(output_data)
         output_layer.features = output_features
